@@ -3,7 +3,7 @@
 
 const CACHE = 'cowinthecloud-v1';
 const ASSETS = [
-  './cow_in_the_cloud.html',
+  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

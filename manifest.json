@@ -2,7 +2,7 @@
   "name": "Cow in the Cloud",
   "short_name": "Cow Cloud",
   "description": "Help Berta the cow float on her magic cloud — dodge birds, planes and balloons!",
-  "start_url": "./cow_in_the_cloud.html",
+  "start_url": "./index.html",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#72c8f0",
