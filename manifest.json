@@ -15,6 +15,21 @@
     { "src": "icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "screenshot-gameplay.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Berta floating on her magic cloud while Farmer Jan waves below"
+    },
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "844x390",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Cow in the Cloud gameplay on mobile"
+    }
+  ],
   "prefer_related_applications": false
 }
