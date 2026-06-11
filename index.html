@@ -309,14 +309,14 @@ function update(){
   if(zt===0&&frameCount>0){zoneIndex=(zoneIndex+1)%ZONES.length;zoneFade=0;}
   if(zoneFade<1)zoneFade=Math.min(1,zoneFade+0.008);
 
-  const scrollSpd=0.7+Math.sin(frameCount*0.0007)*0.15+difficulty*0.12;
+  const scrollSpd=0.77+Math.sin(frameCount*0.0007)*0.15+difficulty*0.12; // +10% base scroll speed
   bgScrolls[zoneIndex]+=scrollSpd;
 
   // Farmer Jan — scrolls left with the world, disappears off-screen
   if(farmerJan&&farmerJan.active){
     farmerJan.x-=scrollSpd;
     farmerJan.frameTimer++;
-    if(farmerJan.frameTimer>=22){
+    if(farmerJan.frameTimer>=20){
       farmerJan.frameTimer=0;
       farmerJan.frame+=farmerJan.frameDir;
       if(farmerJan.frame>=3){farmerJan.frameDir=-1;}
@@ -334,8 +334,8 @@ function update(){
   windX+=(windTarget-windX)*0.013;
 
   const SKY_FLOOR=GAME_H*0.52; // lower boundary for cloud (upper 52% of screen)
-  if(pressing)cloud.vy-=0.2322; else cloud.vy+=0.1765; // +5% +3% +2% float speed
-  cloud.vy=Math.max(-4.964,Math.min(4.964,cloud.vy));
+  if(pressing)cloud.vy-=0.2554; else cloud.vy+=0.1942; // +10% on top of prior increases
+  cloud.vy=Math.max(-5.460,Math.min(5.460,cloud.vy));
   cloud.y+=cloud.vy;cloud.x+=windX*0.32;
   cloud.x=Math.max(20,Math.min(CW-cloud.w-20,cloud.x));
   cloud.y=Math.max(68,Math.min(SKY_FLOOR,cloud.y)); // min 68 keeps Berta on screen
