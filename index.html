@@ -271,14 +271,14 @@ function spawnObstacle(){
   } else if(r<0.68){
     const isJet=Math.random()>.55;
     obstacles.push({type:'plane',subtype:isJet?'jet':'enemy1',
-      x:CW+120,y:30+Math.random()*(GAME_H*.40),
+      x:CW+120,y:50+Math.random()*(GAME_H*.38),
       vx:-(isJet?4.08+Math.random()*1.275:2.72+Math.random()*1.02)*d,
       vy:(Math.random()-.5)*.3,w:isJet?100:130,h:55,reacted:false,vxSlowed:false});
   } else if(r<0.84){
     powerups.push({type:'raincloud',x:CW+70,
       y:GAME_H*.04+Math.random()*(GAME_H*.38),vx:-(1.2+Math.random()*.6),w:80,h:70});
   } else {
-    obstacles.push({type:'balloon',x:CW+70,y:GAME_H*.04+Math.random()*(GAME_H*.40),
+    obstacles.push({type:'balloon',x:CW+70,y:GAME_H*.18+Math.random()*(GAME_H*.30),
       vx:-(0.7+Math.random()*.4),vy:0,w:60,h:95,harmless:true,hitTimer:0,popped:false});
   }
 }
@@ -334,11 +334,11 @@ function update(){
   windX+=(windTarget-windX)*0.013;
 
   const SKY_FLOOR=GAME_H*0.52; // lower boundary for cloud (upper 52% of screen)
-  if(pressing)cloud.vy-=0.21; else cloud.vy+=0.16;
-  cloud.vy=Math.max(-4.5,Math.min(4.5,cloud.vy));
+  if(pressing)cloud.vy-=0.221; else cloud.vy+=0.168; // +5% float speed
+  cloud.vy=Math.max(-4.725,Math.min(4.725,cloud.vy));
   cloud.y+=cloud.vy;cloud.x+=windX*0.32;
   cloud.x=Math.max(20,Math.min(CW-cloud.w-20,cloud.x));
-  cloud.y=Math.max(28,Math.min(SKY_FLOOR,cloud.y));
+  cloud.y=Math.max(68,Math.min(SKY_FLOOR,cloud.y)); // min 68 keeps Berta on screen
   // If cloud hits the floor of the sky zone → Berta falls off
   if(cloud.y>=SKY_FLOOR-2&&cloud.vy>=0){
     triggerFall('Berta drifted too low. The clouds thinned out and she began her descent.');return;
@@ -357,6 +357,8 @@ function update(){
     if(o.scared)o.vy-=0.2;
     if(o.type==='balloon')o.vy=Math.sin(frameCount*.02)*.4;
     if(o.type==='plane'&&o.vxSlowed){o.vx*=0.996;if(Math.abs(o.vx)>2.38)o.vxSlowed=false;}
+    const minOY=o.type==='balloon'?78:o.type==='eagle'?35:30;
+    if(o.y<minOY){o.y=minOY;if((o.vy||0)<0)o.vy=0;}
     if(o.x<-200||o.x>CW+200||o.y<-120)return false;
     if(!o.scared&&!o.harmless&&o.hitTimer===0){
       const cx=cloud.x+cloud.w/2,cy=cloud.y+cloud.h/2;
@@ -496,10 +498,8 @@ function render(){
   if(spr){const sw=cloud.w,sh=spr.height*(sw/spr.width);ctx.drawImage(spr,cloud.x,cloud.y-sh*.15,sw,sh);}
   ctx.restore();
 
-  // HP bar
-  const pct=cloud.hp/cloud.maxHp;
-  ctx.fillStyle='rgba(180,220,255,.28)';rrect(cloud.x,cloud.y+cloud.h+5,cloud.w,7,3.5);ctx.fill();
-  if(pct>0){ctx.fillStyle=pct>.5?'#5ab8f5':pct>.25?'#f5a623':'#e24b4a';rrect(cloud.x,cloud.y+cloud.h+5,cloud.w*pct,7,3.5);ctx.fill();}
+  // Cloud health indicator (top-left corner)
+  drawCloudHealth();
 
   if(Math.abs(windX)>.5){
     ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='13px Georgia';ctx.textAlign='center';
@@ -536,6 +536,42 @@ function render(){
     ctx.font='15px Georgia';ctx.fillText('Berta is still chewing.',CW/2,GAME_H/2+20);
     ctx.textAlign='left';
   }
+  ctx.restore();
+}
+
+// ── Cloud health indicator ─────────────────────────────────────────────────
+function drawCloudShape(bx,by,cw,ch){
+  ctx.beginPath();
+  ctx.arc(bx+cw*.22,by+ch*.72,ch*.28,Math.PI*.5,Math.PI*1.5);
+  ctx.arc(bx+cw*.36,by+ch*.28,ch*.30,Math.PI*1.1,0);
+  ctx.arc(bx+cw*.68,by+ch*.20,ch*.26,Math.PI,0);
+  ctx.arc(bx+cw*.84,by+ch*.68,ch*.24,Math.PI*1.5,Math.PI*.5);
+  ctx.closePath();
+}
+function drawCloudHealth(){
+  if(state!=='playing')return;
+  const pct=cloud.hp/cloud.maxHp;
+  const bx=10,by=10,cw=66,ch=34;
+  ctx.save();
+  ctx.globalAlpha=0.38;
+  ctx.fillStyle='#aaccee';
+  drawCloudShape(bx,by,cw,ch);
+  ctx.fill();
+  if(pct>0){
+    ctx.save();
+    drawCloudShape(bx,by,cw,ch);
+    ctx.clip();
+    ctx.globalAlpha=0.88;
+    ctx.fillStyle=pct>.5?'#5ab8f5':pct>.25?'#f5a623':'#e24b4a';
+    const fillH=ch*pct;
+    ctx.fillRect(bx-2,by+ch-fillH,cw+4,fillH+2);
+    ctx.restore();
+  }
+  ctx.globalAlpha=0.72;
+  ctx.strokeStyle='rgba(255,255,255,0.9)';
+  ctx.lineWidth=1.8;
+  drawCloudShape(bx,by,cw,ch);
+  ctx.stroke();
   ctx.restore();
 }
 
