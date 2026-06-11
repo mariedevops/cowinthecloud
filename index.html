@@ -334,8 +334,8 @@ function update(){
   windX+=(windTarget-windX)*0.013;
 
   const SKY_FLOOR=GAME_H*0.52; // lower boundary for cloud (upper 52% of screen)
-  if(pressing)cloud.vy-=0.221; else cloud.vy+=0.168; // +5% float speed
-  cloud.vy=Math.max(-4.725,Math.min(4.725,cloud.vy));
+  if(pressing)cloud.vy-=0.2322; else cloud.vy+=0.1765; // +5% +3% +2% float speed
+  cloud.vy=Math.max(-4.964,Math.min(4.964,cloud.vy));
   cloud.y+=cloud.vy;cloud.x+=windX*0.32;
   cloud.x=Math.max(20,Math.min(CW-cloud.w-20,cloud.x));
   cloud.y=Math.max(68,Math.min(SKY_FLOOR,cloud.y)); // min 68 keeps Berta on screen
@@ -551,7 +551,7 @@ function drawCloudShape(bx,by,cw,ch){
 function drawCloudHealth(){
   if(state!=='playing')return;
   const pct=cloud.hp/cloud.maxHp;
-  const bx=10,by=10,cw=66,ch=34;
+  const bx=10,by=52,cw=66,ch=34; // below the HUD altitude pill
   ctx.save();
   ctx.globalAlpha=0.38;
   ctx.fillStyle='#aaccee';
