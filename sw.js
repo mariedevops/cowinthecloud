@@ -1,7 +1,7 @@
 // Cow in the Cloud — Service Worker
 // Caches all game assets for full offline play
 
-const CACHE = 'cowinthecloud-v1';
+const CACHE = 'cowinthecloud-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
